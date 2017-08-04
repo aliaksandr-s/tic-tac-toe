@@ -4,7 +4,12 @@
 
 <script>
   export default {
-    data () {}
+    data () {
+      return {
+        frozen: false,
+        mark: ''
+      }
+    }
   }
 </script>
 

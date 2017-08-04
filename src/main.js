@@ -4,7 +4,9 @@ import Vue from 'vue'
 import App from './App'
 
 Vue.config.productionTip = false
+window.Event = new Vue()
 
+console.log(Event)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

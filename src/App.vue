@@ -15,7 +15,11 @@ export default {
   name: 'app',
   data () {
     return {
-
+      matches: 0,
+      wins: {
+        O: 0,
+        X: 0
+      }
     }
   }
 }
