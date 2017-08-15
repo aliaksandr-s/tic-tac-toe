@@ -1,13 +1,30 @@
 <template>
-  <td class="cell">{{ mark }}</td>
+  <td class="cell" @click="strike">{{ mark }}</td>
 </template>
 
 <script>
   export default {
+    props: ['name'],
     data () {
       return {
         frozen: false,
         mark: ''
+      }
+    },
+    created () {
+      Event.$on('strike', cellNumber => {
+        Event.$on('freeze', () => {
+          this.frozen = true
+        })
+      })
+    },
+    methods: {
+      strike () {
+        if (!this.frozen) {
+          this.mark = this.$parent.activePlayer
+          this.frozen = true
+          Event.$emit('strike', this.name)
+        }
       }
     }
   }
@@ -20,11 +37,13 @@
   border: 6px solid #2c3e50;
   font-size: 3.5em;
   font-family: 'Gochi Hand', sans-serif;
+  user-select: none;
+  cursor: pointer;
 }
 
-.cell:hover {
+ /* .cell:hover {
   background-color: #7f8c8d;
-}
+} */
 
 .cell::after {
   content: '';
