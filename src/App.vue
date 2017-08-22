@@ -8,8 +8,10 @@
     <div id="app">
       <div id="details">
         <h1>Tic Tac Toe</h1>
+        <h2>Match #{{ matches + 1 }}</h2>
       </div>
       <grid></grid>
+      <button class="restart" @click="restart">Restart</button>
     </div>
   </div>
 </template>
@@ -29,8 +31,17 @@ export default {
       }
     }
   },
+
   created () {
     Event.$on('win', winner => this.wins[winner]++)
+  },
+
+  methods: {
+    restart () {
+      Event.$emit('clearCell')
+      Event.$emit('gridReset')
+      this.matches++
+    }
   }
 }
 </script>

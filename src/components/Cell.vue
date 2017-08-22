@@ -5,19 +5,27 @@
 <script>
   export default {
     props: ['name'],
+
     data () {
       return {
         frozen: false,
         mark: ''
       }
     },
+
     created () {
       Event.$on('strike', cellNumber => {
         Event.$on('freeze', () => {
           this.frozen = true
         })
       })
+
+      Event.$on('clearCell', () => {
+        this.mark = ''
+        this.frozen = false
+      })
     },
+
     methods: {
       strike () {
         if (!this.frozen) {
@@ -27,6 +35,7 @@
         }
       }
     }
+
   }
 </script>
 

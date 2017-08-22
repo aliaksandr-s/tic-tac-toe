@@ -28,6 +28,7 @@
 
   export default {
     components: { Cell },
+
     data () {
       return {
         activePlayer: 'O',
@@ -52,6 +53,7 @@
         ]
       }
     },
+
     created () {
       Event.$on('strike', cellNumber => {
         this.cells[cellNumber] = this.activePlayer
@@ -59,11 +61,17 @@
         this.gameStatus = this.changeGameStatus()
         this.changePlayer()
       })
+
+      Event.$on('gridReset', () => {
+        Object.assign(this.$data, this.$options.data())
+      })
     },
+
     computed: {
       nonActivePlayer () {
         return this.activePlayer === 'O' ? 'X' : 'O'
       },
+
       gameStatusMessage () {
         switch (this.gameStatus) {
           case 'win':
@@ -75,6 +83,7 @@
         }
       }
     },
+
     watch: {
       gameStatus () {
         switch (this.gameStatus) {
@@ -87,10 +96,12 @@
         }
       }
     },
+
     methods: {
       changePlayer () {
         this.activePlayer = this.nonActivePlayer
       },
+
       changeGameStatus () {
         if (this.checkForWin()) {
           return this.gameIsWon()
@@ -99,6 +110,7 @@
         }
         return 'turn'
       },
+
       checkForWin () {
         for (let i = 0; i < this.winConditions.length; i++) {
           // gets a single condition wc from the whole array
@@ -112,6 +124,7 @@
         }
         return false
       },
+
       areEqual () {
         let len = arguments.length
 
@@ -124,6 +137,7 @@
         }
         return true
       },
+
       gameIsWon () {
         // fires win event for the App component to change the score
         Event.$emit('win', this.activePlayer)
