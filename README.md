@@ -4,6 +4,7 @@
 ## To Do
 
 * Add AI
+* Add demo
 
 ## Build Setup
 
