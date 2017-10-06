@@ -28,7 +28,7 @@
 
     methods: {
       strike () {
-        if (!this.frozen) {
+        if (!this.frozen && this.$parent.activePlayer) {
           this.mark = this.$parent.activePlayer
           this.frozen = true
           Event.$emit('strike', this.name)

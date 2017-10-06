@@ -1,7 +1,13 @@
 <template>
   <div>
-    <div class="gameStatus" :class="gameStatusColor">
+    <div v-if="activePlayer" class="gamePanel" :class="gameStatusColor">
       {{ gameStatusMessage }}
+    </div>
+    <div v-if="!activePlayer" class="gamePanel" >
+      Choose:
+      <span @click="selectPlayer('X')" class="selectPlayer__player animated wiggle">X</span>
+      or
+      <span @click="selectPlayer('O')" class="selectPlayer__player animated shake">O</span>
     </div>
     <table class="grid">
       <tr>
@@ -31,7 +37,7 @@
 
     data () {
       return {
-        activePlayer: 'O',
+        activePlayer: '',
         gameStatus: 'turn',
         gameStatusColor: 'statusTurn',
         moves: 0,
@@ -63,7 +69,7 @@
       })
 
       Event.$on('gridReset', () => {
-        Object.assign(this.$data, this.$options.data())
+        Object.assign(this.$data, this.$options.data(), {activePlayer: this.$data.activePlayer})
       })
     },
 
@@ -100,6 +106,10 @@
     methods: {
       changePlayer () {
         this.activePlayer = this.nonActivePlayer
+      },
+
+      selectPlayer (player) {
+        this.activePlayer = player
       },
 
       changeGameStatus () {
@@ -158,7 +168,16 @@
   border-collapse: collapse;
 }
 
-.gameStatus {
+.selectPlayer__player {
+  display: inline-block;
+  margin: 0 10px 0 10px;
+}
+
+.selectPlayer__player:hover {
+  cursor: pointer;
+}
+
+.gamePanel {
   margin: 0px;
   padding: 15px;
   border-top-left-radius: 20px;
@@ -179,5 +198,42 @@
 
 .statusDraw {
   background-color: #9b59b6;
+}
+
+.animated {
+    animation-duration: 2s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in;
+    animation-iteration-count:infinite;
+}
+
+@keyframes wiggle {
+    0% { transform: skewX(9deg); }
+    10% { transform: skewX(-8deg); }
+    20% { transform: skewX(7deg); }
+    30% { transform: skewX(-6deg); }
+    40% { transform: skewX(5deg); }
+    50% { transform: skewX(-4deg); }
+    60% { transform: skewX(3deg); }
+    70% { transform: skewX(-2deg); }
+    80% { transform: skewX(1deg); }
+    90% { transform: skewX(0deg); }
+    100% { transform: skewX(0deg); }
+}
+.wiggle {
+    animation-name: wiggle;
+    animation-timing-function: ease-in;
+}
+.animated.wiggle {
+    animation-duration: 0.75s;
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {transform: translateX(-1px);}
+    20%, 40%, 60%, 80% {transform: translateX(1px);}
+}
+.shake {
+    animation-name: shake;
 }
 </style>
