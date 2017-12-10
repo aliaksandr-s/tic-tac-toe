@@ -1,42 +1,20 @@
 <template>
-  <td class="cell" @click="strike">{{ mark }}</td>
+  <td class="cell" @click="strike">{{ value }}</td>
 </template>
 
 <script>
   export default {
-    props: ['name'],
-
-    data () {
-      return {
-        frozen: false,
-        mark: ''
-      }
-    },
-
-    created () {
-      Event.$on('strike', cellNumber => {
-        Event.$on('freeze', () => {
-          this.frozen = true
-        })
-      })
-
-      Event.$on('clearCell', () => {
-        this.mark = ''
-        this.frozen = false
-      })
-    },
+    props: ['name', 'value', 'isFrozen'],
 
     methods: {
       strike () {
-        if (!this.frozen && this.$parent.activePlayer) {
-          this.mark = this.$parent.activePlayer
-          this.frozen = true
+        if (!this.isFrozen && this.$parent.activePlayer) {
           Event.$emit('strike', this.name)
         }
       }
     }
-
   }
+
 </script>
 
 <style>

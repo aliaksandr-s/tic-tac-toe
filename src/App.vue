@@ -38,7 +38,6 @@ export default {
 
   methods: {
     restart () {
-      Event.$emit('clearCell')
       Event.$emit('gridReset')
       this.matches++
     }

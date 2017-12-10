@@ -11,19 +11,19 @@
     </div>
     <table class="grid">
       <tr>
-        <cell name="1"></cell>
-        <cell name="2"></cell>
-        <cell name="3"></cell>
+        <cell name="1" :value="cells['1']['value']" :isFrozen="cells['1']['isFrozen']"></cell>
+        <cell name="2" :value="cells['2']['value']" :isFrozen="cells['2']['isFrozen']"></cell>
+        <cell name="3" :value="cells['3']['value']" :isFrozen="cells['3']['isFrozen']"></cell>
       </tr>
       <tr>
-        <cell name="4"></cell>
-        <cell name="5"></cell>
-        <cell name="6"></cell>
+        <cell name="4" :value="cells['4']['value']" :isFrozen="cells['4']['isFrozen']"></cell>
+        <cell name="5" :value="cells['5']['value']" :isFrozen="cells['5']['isFrozen']"></cell>
+        <cell name="6" :value="cells['6']['value']" :isFrozen="cells['6']['isFrozen']"></cell>
       </tr>
       <tr>
-        <cell name="7"></cell>
-        <cell name="8"></cell>
-        <cell name="9"></cell>
+        <cell name="7" :value="cells['7']['value']" :isFrozen="cells['7']['isFrozen']"></cell>
+        <cell name="8" :value="cells['8']['value']" :isFrozen="cells['8']['isFrozen']"></cell>
+        <cell name="9" :value="cells['9']['value']" :isFrozen="cells['9']['isFrozen']"></cell>
       </tr>
     </table>
   </div>
@@ -42,15 +42,15 @@
         gameStatusColor: 'statusTurn',
         moves: 0,
         cells: {
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-          8: '',
-          9: ''
+          1: { value: '', isFrozen: false, index: 1 },
+          2: { value: '', isFrozen: false, index: 2 },
+          3: { value: '', isFrozen: false, index: 3 },
+          4: { value: '', isFrozen: false, index: 4 },
+          5: { value: '', isFrozen: false, index: 5 },
+          6: { value: '', isFrozen: false, index: 6 },
+          7: { value: '', isFrozen: false, index: 7 },
+          8: { value: '', isFrozen: false, index: 8 },
+          9: { value: '', isFrozen: false, index: 9 }
         },
         winConditions: [
           [1, 2, 3], [4, 5, 6], [7, 8, 9], // rows
@@ -62,7 +62,8 @@
 
     created () {
       Event.$on('strike', cellNumber => {
-        this.cells[cellNumber] = this.activePlayer
+        this.cells[cellNumber]['value'] = this.activePlayer
+        this.freezeCell(this.cells[cellNumber])
         this.moves = this.moves + 1
         this.gameStatus = this.changeGameStatus()
         this.changePlayer()
@@ -70,12 +71,13 @@
 
       Event.$on('gridReset', () => {
         Object.assign(this.$data, this.$options.data(), {activePlayer: this.$data.activePlayer})
+        this.cpuTurn()
       })
     },
 
     computed: {
       nonActivePlayer () {
-        return this.activePlayer === 'O' ? 'X' : 'O'
+        return this.getOppositePlayer(this.activePlayer)
       },
 
       gameStatusMessage () {
@@ -104,12 +106,38 @@
     },
 
     methods: {
+      freezeCell (cell) {
+        cell.isFrozen = true
+      },
+
+      getOppositePlayer (player) {
+        return player === 'O' ? 'X' : 'O'
+      },
+
       changePlayer () {
         this.activePlayer = this.nonActivePlayer
+        this.cpuTurn()
+      },
+
+      getAvailvableCellIndex (cells) {
+        const cellsArr = Object.values(cells)
+        const availableCells = cellsArr.filter((cell) => !cell.value).map(cell => cell.index)
+        const randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)]
+        return randomIndex
+      },
+
+      cpuTurn () {
+        // TODO: Improve cpu
+        if (this.activePlayer === this.cpuPlayer && this.gameStatus === 'turn') {
+          const index = this.getAvailvableCellIndex(this.cells)
+          Event.$emit('strike', index)
+        }
       },
 
       selectPlayer (player) {
         this.activePlayer = player
+        this.humanPlayer = player
+        this.cpuPlayer = this.getOppositePlayer(player)
       },
 
       changeGameStatus () {
@@ -126,7 +154,6 @@
           // gets a single condition wc from the whole array
           let wc = this.winConditions[i]
           let cells = this.cells
-
           // compares 3 cell values based on the cells in the condition
           if (this.areEqual(cells[wc[0]], cells[wc[1]], cells[wc[2]])) {
             return true
@@ -141,18 +168,23 @@
         // loops through each value and compares them with an empty sting and
         // for inequality
         for (let i = 1; i < len; i++) {
-          if (arguments[i] === '' || arguments[i] !== arguments[i - 1]) {
+          if (arguments[i]['value'] === '' || arguments[i]['value'] !== arguments[i - 1]['value']) {
             return false
           }
         }
         return true
       },
 
+      freezeAllCells () {
+        Object.keys(this.cells).forEach(key => this.freezeCell(this.cells[key]))
+      },
+
       gameIsWon () {
         // fires win event for the App component to change the score
         Event.$emit('win', this.activePlayer)
         // fires an event for the Cell to freeze
-        Event.$emit('freeze')
+        this.freezeAllCells()
+        // Event.$emit('freeze')
         // sets the status to win
         return 'win'
       }
