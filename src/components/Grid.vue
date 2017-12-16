@@ -136,7 +136,6 @@
 
       selectPlayer (player) {
         this.activePlayer = player
-        this.humanPlayer = player
         this.cpuPlayer = this.getOppositePlayer(player)
       },
 
