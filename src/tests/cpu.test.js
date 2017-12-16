@@ -31,7 +31,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells)).toEqual(3)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(3)
     });
 
     test('coll case', () => {
@@ -54,13 +54,13 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells)).toEqual(7)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(7)
     });
 
     test('diagonal case', () => {
       const initData = {
         data: {
-          cpuPlayer: '',
+          cpuPlayer: 'X',
           cells: {
             1: { value: 'X', isFrozen: false, index: 1 },
             2: { value: 'O', isFrozen: false, index: 2 },
@@ -77,7 +77,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells)).toEqual(5)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(5)
     });
   })
 
@@ -102,7 +102,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells)).toEqual(7)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(7)
     });
 
     test('column case', () => {
@@ -125,7 +125,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells)).toEqual(8)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(8)
     });
 
     test('diagonal case', () => {
@@ -148,7 +148,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells)).toEqual(9)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(9)
     });
   })
 });

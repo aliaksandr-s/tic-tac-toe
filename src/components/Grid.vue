@@ -119,17 +119,38 @@
         this.cpuTurn()
       },
 
-      getAvailvableCellIndex (cells) {
+      getAvailvableCellIndex (cells, cpuPlayer) {
         const cellsArr = Object.values(cells)
+        const winCondMap = this.winConditions.map(winArr => winArr.map(val => cells[val]))
+        const arrWithout = (arr, i) => [...arr.slice(0, i), ...arr.slice(i + 1, arr.length)]
+
+        const getWinningIndexes = () => {
+          const filterWinning = (current, rest) => current.value === '' && rest.every(el => el.value === cpuPlayer)
+
+          const winningArr = winCondMap.map(winCondArr => winCondArr.filter((el, i, arr) => filterWinning(el, arrWithout(arr, i))))
+          const cleanWinningArr = Array.concat(...winningArr).map(el => el.index)
+          return cleanWinningArr
+        }
+
+        // check if the cpu can win
+        const winningIndexes = getWinningIndexes()
+        if (winningIndexes.length >= 1) {
+          return winningIndexes[0]
+        }
+
+        // don't let the player to win
+        // TODO: ....
+
+        // just a random cell
         const availableCells = cellsArr.filter((cell) => !cell.value).map(cell => cell.index)
         const randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)]
         return randomIndex
       },
 
       cpuTurn () {
-        // TODO: Improve cpu
+        // TODO: Improve cpu and add delay
         if (this.activePlayer === this.cpuPlayer && this.gameStatus === 'turn') {
-          const index = this.getAvailvableCellIndex(this.cells)
+          const index = this.getAvailvableCellIndex(this.cells, this.cpuPlayer)
           Event.$emit('strike', index)
         }
       },
