@@ -15,6 +15,7 @@ describe('CPU tests', () => {
       const initData = {
         data: {
           cpuPlayer: 'X',
+          humanPlayer: 'O',
           cells: {
             1: { value: 'X', isFrozen: false, index: 1 },
             2: { value: 'X', isFrozen: false, index: 2 },
@@ -31,13 +32,14 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(3)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer, initData.data.humanPlayer)).toEqual(3)
     });
 
     test('coll case', () => {
       const initData = {
         data: {
           cpuPlayer: 'X',
+          humanPlayer: 'O',
           cells: {
             1: { value: 'X', isFrozen: false, index: 1 },
             2: { value: 'O', isFrozen: false, index: 2 },
@@ -54,13 +56,14 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(7)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer, initData.data.humanPlayer)).toEqual(7)
     });
 
     test('diagonal case', () => {
       const initData = {
         data: {
           cpuPlayer: 'X',
+          humanPlayer: 'O',
           cells: {
             1: { value: 'X', isFrozen: false, index: 1 },
             2: { value: 'O', isFrozen: false, index: 2 },
@@ -77,7 +80,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(5)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer, initData.data.humanPlayer)).toEqual(5)
     });
   })
 
@@ -86,6 +89,7 @@ describe('CPU tests', () => {
       const initData = {
         data: {
           cpuPlayer: 'X',
+          humanPlayer: 'O',
           cells: {
             1: { value: 'X', isFrozen: false, index: 1 },
             2: { value: '', isFrozen: false, index: 2 },
@@ -102,13 +106,14 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(7)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer, initData.data.humanPlayer)).toEqual(7)
     });
 
     test('column case', () => {
       const initData = {
         data: {
           activePlayer: 'X',
+          humanPlayer: 'O',
           cells: {
             1: { value: '', isFrozen: false, index: 1 },
             2: { value: 'O', isFrozen: false, index: 2 },
@@ -125,13 +130,14 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(8)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer, initData.data.humanPlayer)).toEqual(8)
     });
 
     test('diagonal case', () => {
       const initData = {
         data: {
           activePlayer: '',
+          humanPlayer: 'O',
           cells: {
             1: { value: 'O', isFrozen: false, index: 1 },
             2: { value: '', isFrozen: false, index: 2 },
@@ -148,7 +154,7 @@ describe('CPU tests', () => {
 
       const Constructor = Vue.extend(Grid)
       const vm = new Constructor(initData).$mount()
-      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer)).toEqual(9)
+      expect(vm.getAvailvableCellIndex(initData.data.cells, initData.data.cpuPlayer, initData.data.humanPlayer)).toEqual(9)
     });
   })
 });

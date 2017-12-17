@@ -119,27 +119,32 @@
         this.cpuTurn()
       },
 
-      getAvailvableCellIndex (cells, cpuPlayer) {
+      getAvailvableCellIndex (cells, cpuPlayer, humanPlayer) {
         const cellsArr = Object.values(cells)
         const winCondMap = this.winConditions.map(winArr => winArr.map(val => cells[val]))
         const arrWithout = (arr, i) => [...arr.slice(0, i), ...arr.slice(i + 1, arr.length)]
 
-        const getWinningIndexes = () => {
-          const filterWinning = (current, rest) => current.value === '' && rest.every(el => el.value === cpuPlayer)
+        // filters
+        const filterWinning = (current, rest) => current.value === '' && rest.every(el => el.value === cpuPlayer)
+        const filterNotLoosing = (current, rest) => current.value === '' && rest.every(el => el.value === humanPlayer)
 
-          const winningArr = winCondMap.map(winCondArr => winCondArr.filter((el, i, arr) => filterWinning(el, arrWithout(arr, i))))
-          const cleanWinningArr = Array.concat(...winningArr).map(el => el.index)
-          return cleanWinningArr
+        const getFilteredIndexes = (filter) => {
+          const resultArr = winCondMap.map(winCondArr => winCondArr.filter((el, i, arr) => filter(el, arrWithout(arr, i))))
+          const cleanResultArr = Array.concat(...resultArr).map(el => el.index)
+          return cleanResultArr
         }
 
         // check if the cpu can win
-        const winningIndexes = getWinningIndexes()
+        const winningIndexes = getFilteredIndexes(filterWinning)
         if (winningIndexes.length >= 1) {
           return winningIndexes[0]
         }
 
         // don't let the player to win
-        // TODO: ....
+        const notLoosingIndexes = getFilteredIndexes(filterNotLoosing)
+        if (notLoosingIndexes.length >= 1) {
+          return notLoosingIndexes[0]
+        }
 
         // just a random cell
         const availableCells = cellsArr.filter((cell) => !cell.value).map(cell => cell.index)
@@ -150,7 +155,7 @@
       cpuTurn () {
         // TODO: Improve cpu and add delay
         if (this.activePlayer === this.cpuPlayer && this.gameStatus === 'turn') {
-          const index = this.getAvailvableCellIndex(this.cells, this.cpuPlayer)
+          const index = this.getAvailvableCellIndex(this.cells, this.cpuPlayer, this.getOppositePlayer(this.cpuPlayer))
           Event.$emit('strike', index)
         }
       },
