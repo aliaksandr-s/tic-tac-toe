@@ -110,6 +110,10 @@
         cell.isFrozen = true
       },
 
+      unFreezeCell (cell) {
+        cell.isFrozen = false
+      },
+
       getOppositePlayer (player) {
         return player === 'O' ? 'X' : 'O'
       },
@@ -153,10 +157,13 @@
       },
 
       cpuTurn () {
-        // TODO: Improve cpu and add delay
         if (this.activePlayer === this.cpuPlayer && this.gameStatus === 'turn') {
+          this.freezeAllCells()
           const index = this.getAvailvableCellIndex(this.cells, this.cpuPlayer, this.getOppositePlayer(this.cpuPlayer))
-          Event.$emit('strike', index)
+          setTimeout(() => {
+            Event.$emit('strike', index)
+            this.unFreezeAvailvableCells()
+          }, 1000)
         }
       },
 
@@ -202,6 +209,14 @@
 
       freezeAllCells () {
         Object.keys(this.cells).forEach(key => this.freezeCell(this.cells[key]))
+      },
+
+      unFreezeAvailvableCells () {
+        Object.keys(this.cells).forEach(key => {
+          if (this.cells[key].value === '') {
+            this.unFreezeCell(this.cells[key])
+          }
+        })
       },
 
       gameIsWon () {
